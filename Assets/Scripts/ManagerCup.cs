@@ -5,6 +5,7 @@ using System.Linq;
 using DefaultNamespace;
 using Events;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ManagerCup : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class ManagerCup : MonoBehaviour
     public event Action<Cup> OnChangeLastCup;
     
     [SerializeField]
-    private float _jumpLength;
+    private Slider _sliderLengthJump;
     [SerializeField]
     private float _delayBeforeJump;
     [SerializeField]
@@ -97,7 +98,7 @@ public class ManagerCup : MonoBehaviour
             return hitInfo.point;
         }
         
-        return GetGlassPosition() + new Vector3(0, transform.position.y, _jumpLength);
+        return GetGlassPosition() + new Vector3(0, transform.position.y, _sliderLengthJump.value);
     }
 
     private void CheckGameObject()
@@ -109,6 +110,14 @@ public class ManagerCup : MonoBehaviour
         }
     }
 
+    private void CheckForPin(RaycastHit hitInfo)
+    {
+        if (hitInfo.collider.TryGetComponent(out Pin pin))
+        {
+            _removeCup = _startCups[0];
+        }
+    }
+    
     private void CheckForCup(RaycastHit hitInfo)
     {
         if (hitInfo.collider.TryGetComponent(out Cup cup))
@@ -137,17 +146,9 @@ public class ManagerCup : MonoBehaviour
         _removeCup = null;
     }
 
-    private void CheckForPin(RaycastHit hitInfo)
-    {
-        if (hitInfo.collider.TryGetComponent(out Pin pin))
-        {
-            _removeCup = _startCups[0];
-        }
-    }
-    
     private Vector3 GetReleasePosition()
     {
-        return GetGlassPosition() + new Vector3(0, RAYCAST_RELEASE_HEIGHT, _jumpLength);
+        return GetGlassPosition() + new Vector3(0, RAYCAST_RELEASE_HEIGHT, _sliderLengthJump.value);
     }
 
     private Vector3 GetGlassPosition()

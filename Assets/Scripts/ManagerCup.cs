@@ -5,21 +5,22 @@ using System.Linq;
 using DefaultNamespace;
 using Events;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ManagerCup : MonoBehaviour
 {
     private const int RAYCAST_RELEASE_HEIGHT = 50;
 
     public event Action<Cup> OnChangeLastCup;
-    
+
+    [Range(0, 10f)]
     [SerializeField]
-    private Slider _sliderLengthJump;
+    private float _maxPowerJump;
     [SerializeField]
     private float _delayBeforeJump;
     [SerializeField]
     private List<Cup> _startCups = new List<Cup>();
-    
+
+    private float _currentPowerJump;
     private IDisposable _subscription;
     
     private Cup _newCup;
@@ -36,7 +37,8 @@ public class ManagerCup : MonoBehaviour
         {
             return;
         }
-
+        
+        _currentPowerJump = tapEvent.Power * _maxPowerJump;
         CheckGameObject();
         StartCoroutine(StartJumpingCup());
         
@@ -98,7 +100,7 @@ public class ManagerCup : MonoBehaviour
             return hitInfo.point;
         }
         
-        return GetGlassPosition() + new Vector3(0, transform.position.y, _sliderLengthJump.value);
+        return GetGlassPosition() + new Vector3(0, transform.position.y, _currentPowerJump);
     }
 
     private void CheckGameObject()
@@ -148,7 +150,7 @@ public class ManagerCup : MonoBehaviour
 
     private Vector3 GetReleasePosition()
     {
-        return GetGlassPosition() + new Vector3(0, RAYCAST_RELEASE_HEIGHT, _sliderLengthJump.value);
+        return GetGlassPosition() + new Vector3(0, RAYCAST_RELEASE_HEIGHT, _currentPowerJump);
     }
 
     private Vector3 GetGlassPosition()

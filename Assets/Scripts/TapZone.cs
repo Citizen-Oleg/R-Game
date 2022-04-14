@@ -2,10 +2,23 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TapZone : MonoBehaviour, IPointerDownHandler
+public class TapZone : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    private const int SWIPE_MULTIPLIER = 3;
+    
+    private float _startYposition;
+    
     public void OnPointerDown(PointerEventData eventData)
     {
-        EventStreams.UserInterface.Publish(new TapEvent());
+        _startYposition = eventData.position.normalized.y;
     }
-}
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        var power = eventData.position.normalized.y - _startYposition;
+        if (power > 0)
+        {
+            EventStreams.UserInterface.Publish(new TapEvent(Mathf.Clamp01(power * SWIPE_MULTIPLIER)));
+        }
+    }
+} 

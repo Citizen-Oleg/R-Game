@@ -39,7 +39,7 @@ public class ManagerCup : MonoBehaviour
         }
         
         _currentPowerJump = tapEvent.Power * _maxPowerJump;
-        CheckGameObject();
+        CheckCollisionGameObject();
         StartCoroutine(StartJumpingCup());
         
         OnChangeLastCup?.Invoke(_startCups[_startCups.Count - 1]);
@@ -103,7 +103,7 @@ public class ManagerCup : MonoBehaviour
         return GetGlassPosition() + new Vector3(0, transform.position.y, _currentPowerJump);
     }
 
-    private void CheckGameObject()
+    private void CheckCollisionGameObject()
     {
         if (Physics.Raycast(GetReleasePosition(), Vector3.down, out var hitInfo))
         {

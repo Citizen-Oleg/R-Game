@@ -18,7 +18,7 @@ public class TapZone : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         var power = eventData.position.normalized.y - _startYposition;
         if (power > 0)
         {
-            EventStreams.UserInterface.Publish(new TapEvent(Mathf.Clamp01(power * SWIPE_MULTIPLIER)));
+            EventStreams.UserInterface.Publish(new TapEvent(Mathf.Clamp(power * SWIPE_MULTIPLIER, 0.1f, 1f)));
         }
     }
 } 
